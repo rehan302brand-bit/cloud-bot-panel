@@ -1,0 +1,17 @@
+name: BotHosting Auto-Renew
+on:
+  schedule:
+    - cron: '0 */12 * * *' # Har 12 ghante baad
+  workflow_dispatch:
+
+jobs:
+  renew:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Bot & Keep Alive
+        run: |
+          curl -s -X POST -H "Authorization: Bearer ${{ secrets.BH_API_KEY }}" \
+          https://bot-hosting.net/api/v1/deployments/1d1acd0c-c4f2-4458-890f-4987f70a4b84/power \
+          -H "Content-Type: application/json" \
+          -d '{"action":"restart"}' || true
+          echo "Bot Successfully Maintained Active!"
